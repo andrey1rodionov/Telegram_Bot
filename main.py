@@ -1,4 +1,5 @@
 import telebot
+import weather
 
 bot = telebot.TeleBot("760842492:AAHLvYk97oXR1SQpOnVy4InLZ9b69qyUrto")
 
@@ -40,7 +41,7 @@ def handle_text(message):
 
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
-    answer = "Олды тут? "
+    answer = weather.weather + ("\n") + str(weather.temperature)
     if message.text == "Олды на месте":
         answer = "Ряльно на месте. Дальше разговаривать не умею => олды всегда на месте"
         log(message, answer)
