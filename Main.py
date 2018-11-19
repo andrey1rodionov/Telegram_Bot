@@ -2,7 +2,7 @@ import telebot
 
 bot = telebot.TeleBot("760842492:AAHLvYk97oXR1SQpOnVy4InLZ9b69qyUrto")
 
-#bot.send_message(414407353, "Hello")
+#Chat = 414407353
 
 upd = bot.get_updates()
 print(upd)
