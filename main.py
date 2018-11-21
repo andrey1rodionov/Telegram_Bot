@@ -36,6 +36,14 @@ def handle_text(message):
     log(message)
     bot.send_message(message.chat.id, answer)
 
+@bot.message_handler(commands=['help'])
+def handle_text(message):
+    global last_message
+    last_message = 'help'
+    answer = "Справочная система"
+    log(message)
+    bot.send_message(message.chat.id, answer)
+
 @bot.message_handler(commands=['weather'])
 def handle_text(message):
     global last_message
@@ -58,9 +66,15 @@ def handle_text(message):
     if last_message == 'weather':
         allweather = weather.get_weather_for_specific_city(message.text)
         log(message)
-        answer = message.text + "\n" + str(allweather)
-        bot.send_message(message.chat.id, answer)
-        last_message = ''
+        if message.text == 'Stop':
+            answer = 'Отмена команды weather'
+            log(message)
+            bot.send_message(message.chat.id, answer)
+            last_message = ''
+        else:
+            answer = message.text + "\n" + str(allweather)
+            bot.send_message(message.chat.id, answer)
+            last_message = ''
     elif last_message == 'nbrb':
         answer = nbrb.currencies
         log(message)

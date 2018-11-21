@@ -26,22 +26,30 @@ def get_weather_for_specific_city(city):
     city_url = api_endpoint + "?q=" + city + "&appid=" + apikey
     resp = urllib.request.urlopen(city_url)
     parsed_resp = json.loads(resp.read())
-    temperature = parsed_resp['main']['temp']
-    weather = parsed_resp['weather'][0]['description']
-    mist = parsed_resp['main']['humidity']
-    temp_max = parsed_resp['main']['temp_max']
-    temp_min = parsed_resp['main']['temp_min']
-    cloud = parsed_resp['clouds']['all']
-    wind = parsed_resp['wind']['speed']
-    description_brief = parsed_resp['weather'][0]['main']
 
-    message = str(weather) + \
-              "\n" + str(mist) + \
-              "\n" + str(temperature - 273.15) + ' ' + degree_sign + 'С' + \
-              "\n" + 'Temperature from ' + str(temp_max - 273.15) + \
-              ' to ' + str(temp_min - 273.15) + ' ' + degree_sign + 'С' + \
-              "\n" + str(cloud) + \
-              "\n" + str(wind) + \
-              "\n" + str(description_brief)
+    result_code = parsed_resp['cod']
+
+    if result_code == 200:
+        temperature = parsed_resp['main']['temp']
+        weather = parsed_resp['weather'][0]['description']
+        mist = parsed_resp['main']['humidity']
+        temp_max = parsed_resp['main']['temp_max']
+        temp_min = parsed_resp['main']['temp_min']
+        cloud = parsed_resp['clouds']['all']
+        wind = parsed_resp['wind']['speed']
+        description_brief = parsed_resp['weather'][0]['main']
+
+        message = str(weather) + \
+                  "\n" + str(mist) + \
+                  "\n" + str(temperature - 273.15) + ' ' + degree_sign + 'С' + \
+                  "\n" + 'Temperature from ' + str(temp_max - 273.15) + \
+                  ' to ' + str(temp_min - 273.15) + ' ' + degree_sign + 'С' + \
+                  "\n" + str(cloud) + \
+                  "\n" + str(wind) + \
+                  "\n" + str(description_brief) + \
+                  "\n" + str(result_code)
+    else:
+        error_code = parsed_resp['message']
+        message = 'ОШИБКА'
 
     return message
