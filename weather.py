@@ -49,7 +49,7 @@ def get_weather_for_specific_city(city):
                   "\n" + str(description_brief) + \
                   "\n" + str(result_code)
     else:
-        error_code = parsed_resp['message']
+        # error_code = parsed_resp['message']
         message = 'ОШИБКА'
 
     return message
