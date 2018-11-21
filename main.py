@@ -76,12 +76,12 @@ def handle_text(message):
             bot.send_message(message.chat.id, answer)
             last_message = ''
     elif last_message == 'nbrb':
-        answer = nbrb.currencies
+        UAH = (nbrb.UAH['Cur_OfficialRate'])
+        EUR = (nbrb.EUR['Cur_OfficialRate'])
         log(message)
-        for currency in answer:
-            response = str(currency['Cur_Name']) + "\n" + str(currency['Cur_OfficialRate'])
-            bot.send_message(message.chat.id, response)
-            last_message = ''
+        bot.send_message(message.chat.id, UAH)
+        bot.send_message(message.chat.id, EUR)
+        last_message = ''
     else:
         answer = "Такого не существует"
         log(message)

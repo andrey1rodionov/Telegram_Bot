@@ -1,6 +1,6 @@
-import urllib.request
-
 import json
+import urllib.error
+import urllib.request
 
 api_endpoint = "http://api.openweathermap.org/data/2.5/weather"
 
@@ -20,16 +20,17 @@ clouds = u'\U00002601'  # Code: 802-803-804 clouds general
 hot = u'\U0001F525'  # Code: 904
 defaultEmoji = u'\U0001F300'  # default emojis
 
-degree_sign= u'\N{DEGREE SIGN}'
+degree_sign = u'\N{DEGREE SIGN}'
+
 
 def get_weather_for_specific_city(city):
     city_url = api_endpoint + "?q=" + city + "&appid=" + apikey
-    resp = urllib.request.urlopen(city_url)
-    parsed_resp = json.loads(resp.read())
+    try:
+        resp = urllib.request.urlopen(city_url)
+        parsed_resp = json.loads(resp.read())
 
-    result_code = parsed_resp['cod']
+        result_code = parsed_resp['cod']
 
-    if result_code == 200:
         temperature = parsed_resp['main']['temp']
         weather = parsed_resp['weather'][0]['description']
         mist = parsed_resp['main']['humidity']
@@ -48,8 +49,10 @@ def get_weather_for_specific_city(city):
                   "\n" + str(wind) + \
                   "\n" + str(description_brief) + \
                   "\n" + str(result_code)
-    else:
-        # error_code = parsed_resp['message']
-        message = 'ОШИБКА'
+    except urllib.error.HTTPError as err:
+        if err.code == 404:
+            message = 'Такого города не существует'
+        else:
+            message = 'Ошибка'
 
     return message
