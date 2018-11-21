@@ -11,4 +11,4 @@ parseResponse = json.loads(response.read())
 
 currencies = parseResponse
 
-print (currencies)
+# print (currencies)
