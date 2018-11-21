@@ -8,10 +8,8 @@ bot = telebot.TeleBot("760842492:AAHLvYk97oXR1SQpOnVy4InLZ9b69qyUrto")
 
 # Chat = 414407353
 
-
 upd = bot.get_updates()
 print(upd)
-
 
 last_upd = upd[-1]
 message_from_user = last_upd.message
@@ -19,10 +17,7 @@ message_from_user = last_upd.message
 last_message = ''
 
 print(message_from_user)
-
 print(bot.get_me())
-
-
 
 def log(message):
     print("\n -----")
@@ -30,7 +25,8 @@ def log(message):
     print(datetime.now())
     print("Сообщение от {0} {1}. (id = {2}) \n Текст = {3}".format(message.from_user.first_name,
                                                                    message.from_user.last_name,
-                                                                   str(message.from_user.id), message.text))
+                                                                   str(message.from_user.id),
+                                                                   message.text))
 
 @bot.message_handler(commands=['start'])
 def handle_text(message):
@@ -65,7 +61,7 @@ def handle_text(message):
         answer = message.text + "\n" + str(allweather)
         bot.send_message(message.chat.id, answer)
         last_message = ''
-    elif message.text == 'nbrb':
+    elif last_message == 'nbrb':
         answer = nbrb.currencies
         log(message)
         for currency in answer:
@@ -76,17 +72,5 @@ def handle_text(message):
         answer = "Такого не существует"
         log(message)
         bot.send_message(message.chat.id, answer)
-
-"""
-@bot.message_handler(content_types=['text'])
-def handle_text(message):
-    global last_message
-    if last_message == 'nbrb':
-        answer = nbrb.currencies
-        log(message)
-        for currency in answer:
-            response = str(currency['Cur_Name']) + "\n" + str(currency['Cur_OfficialRate'])
-            bot.send_message(message.chat.id, response)
-"""
 
 bot.polling(none_stop = True, interval = 0)

@@ -20,11 +20,12 @@ clouds = u'\U00002601'  # Code: 802-803-804 clouds general
 hot = u'\U0001F525'  # Code: 904
 defaultEmoji = u'\U0001F300'  # default emojis
 
+degree_sign= u'\N{DEGREE SIGN}'
+
 def get_weather_for_specific_city(city):
     city_url = api_endpoint + "?q=" + city + "&appid=" + apikey
     resp = urllib.request.urlopen(city_url)
     parsed_resp = json.loads(resp.read())
-    temp = parsed_resp['main']['temp_min']
     temperature = parsed_resp['main']['temp']
     weather = parsed_resp['weather'][0]['description']
     mist = parsed_resp['main']['humidity']
@@ -34,14 +35,13 @@ def get_weather_for_specific_city(city):
     wind = parsed_resp['wind']['speed']
     description_brief = parsed_resp['weather'][0]['main']
 
+    message = str(weather) + \
+              "\n" + str(mist) + \
+              "\n" + str(temperature - 273.15) + ' ' + degree_sign + 'С' + \
+              "\n" + 'Temperature from ' + str(temp_max - 273.15) + \
+              ' to ' + str(temp_min - 273.15) + ' ' + degree_sign + 'С' + \
+              "\n" + str(cloud) + \
+              "\n" + str(wind) + \
+              "\n" + str(description_brief)
 
-
-    return temp , \
-           temperature , \
-           weather , \
-           mist , \
-           temp_max , \
-           temp_min , \
-           cloud , \
-           wind , \
-           description_brief
+    return message
