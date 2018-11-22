@@ -29,26 +29,21 @@ def get_weather_for_specific_city(city):
         resp = urllib.request.urlopen(city_url)
         parsed_resp = json.loads(resp.read())
 
-        result_code = parsed_resp['cod']
-
-        temperature = parsed_resp['main']['temp']
         weather = parsed_resp['weather'][0]['description']
-        mist = parsed_resp['main']['humidity']
+        temperature = parsed_resp['main']['temp']
         temp_max = parsed_resp['main']['temp_max']
         temp_min = parsed_resp['main']['temp_min']
         cloud = parsed_resp['clouds']['all']
         wind = parsed_resp['wind']['speed']
-        description_brief = parsed_resp['weather'][0]['main']
+        humidity = parsed_resp['main']['humidity']
 
         message = str(weather) + \
-                  "\n" + str(mist) + \
-                  "\n" + str(temperature - 273.15) + ' ' + degree_sign + 'С' + \
+                  "\n" + 'Temperature now ' + str(temperature - 273.15) + ' ' + degree_sign + 'С' + \
                   "\n" + 'Temperature from ' + str(temp_max - 273.15) + \
                   ' to ' + str(temp_min - 273.15) + ' ' + degree_sign + 'С' + \
-                  "\n" + str(cloud) + \
-                  "\n" + str(wind) + \
-                  "\n" + str(description_brief) + \
-                  "\n" + str(result_code)
+                  "\n" + 'Wind ' + str(wind) + ' m/s ' + \
+                  "\n" + 'Humidity ' + str(humidity) + ' % ' + \
+                  "\n" + 'Clouds ' + str(cloud) + ' % '
 
     except urllib.error.HTTPError as err:
         if err.code == 404:
