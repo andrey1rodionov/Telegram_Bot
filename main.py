@@ -4,6 +4,8 @@ import weather
 
 import nbrb
 
+import news
+
 bot = telebot.TeleBot("760842492:AAHLvYk97oXR1SQpOnVy4InLZ9b69qyUrto")
 
 # Chat = 414407353
@@ -72,6 +74,20 @@ def handle_text(message):
     log(message)
     bot.send_message(message.chat.id, rate)
     last_message = ''
+
+@bot.message_handler(commands=['news'])
+def handle_text(message):
+    global last_message
+    last_message = 'news'
+    from datetime import date
+    answer = "Новости на " + "\n" + str(date.today())
+    log(message)
+    bot.send_message(message.chat.id, answer)
+    all_news = news.news_now
+    for news_now in all_news['articles']:
+        top_news = str(news_now['title']) + "\n" + str(news_now['url'])
+        bot.send_message(message.chat.id, top_news)
+        last_message = ''
 
 @bot.message_handler(content_types=['text'])
 def handle_text(message):

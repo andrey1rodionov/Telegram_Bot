@@ -10,6 +10,4 @@ news_url = api_endpoint + "&apiKey=" + apikey
 
 response = urllib.request.urlopen(news_url)
 
-parseResponse = json.loads(response.read())
-
-print(parseResponse)
+news_now = json.loads(response.read())
