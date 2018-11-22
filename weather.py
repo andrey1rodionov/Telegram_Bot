@@ -38,9 +38,9 @@ def get_weather_for_specific_city(city):
         humidity = parsed_resp['main']['humidity']
 
         message = str(weather) + \
-                  "\n" + 'Temperature now ' + str(temperature - 273.15) + ' ' + degree_sign + 'С' + \
-                  "\n" + 'Temperature from ' + str(temp_max - 273.15) + \
-                  ' to ' + str(temp_min - 273.15) + ' ' + degree_sign + 'С' + \
+                  "\n" + 'Temperature now ' + str(round(temperature - 273.15)) + ' ' + degree_sign + 'С' + \
+                  "\n" + 'Temperature from ' + str(round(temp_min - 273.15)) + \
+                  ' to ' + str(round(temp_max - 273.15)) + ' ' + degree_sign + 'С' + \
                   "\n" + 'Wind ' + str(wind) + ' m/s ' + \
                   "\n" + 'Humidity ' + str(humidity) + ' % ' + \
                   "\n" + 'Clouds ' + str(cloud) + ' % '

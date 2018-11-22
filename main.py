@@ -40,7 +40,13 @@ def handle_text(message):
 def handle_text(message):
     global last_message
     last_message = 'help'
-    answer = "Справочная система"
+    answer = "Справочная система Telegram Bot'a NWER" + \
+        "\n" + "Команды:" + \
+        "\n" + "/weather - показывает прогноз погоды в введенном городе" + \
+        "\n" + "Для отмены действия /weather введите команду Stop" + \
+        "\n" + "При попытке ввода несуществующего города - выводится соответствующее сообщения" + "\n" + \
+        "\n" + "/nbrb - выводит курс валют USD, EUR, RUB по собранным данным c сайта Национального Банка РБ" + \
+        "\n" + "Курс валют выводится на дату отправки сообщения" + "\n"
     log(message)
     bot.send_message(message.chat.id, answer)
 
