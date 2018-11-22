@@ -56,9 +56,16 @@ def handle_text(message):
 def handle_text(message):
     global last_message
     last_message = 'nbrb'
-    answer = "Курс валют"
+    from datetime import date
+    answer = "Курс валют на " + "\n" + str(date.today())
     log(message)
     bot.send_message(message.chat.id, answer)
+    rate = str(nbrb.USD['Cur_Scale']) + ' ' + nbrb.USD['Cur_Abbreviation']  + ' = ' + str(nbrb.USD['Cur_OfficialRate']) + "\n" + \
+           str(nbrb.EUR['Cur_Scale']) + ' ' + nbrb.EUR['Cur_Abbreviation']  + ' = ' + str(nbrb.EUR['Cur_OfficialRate']) + "\n" + \
+           str(nbrb.RUB['Cur_Scale']) + ' ' + nbrb.RUB['Cur_Abbreviation']  + ' = ' + str(nbrb.RUB['Cur_OfficialRate'])
+    log(message)
+    bot.send_message(message.chat.id, rate)
+    last_message = ''
 
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
@@ -75,13 +82,6 @@ def handle_text(message):
             answer = message.text + "\n" + str(allweather)
             bot.send_message(message.chat.id, answer)
             last_message = ''
-    elif last_message == 'nbrb':
-        UAH = (nbrb.UAH['Cur_OfficialRate'])
-        EUR = (nbrb.EUR['Cur_OfficialRate'])
-        log(message)
-        bot.send_message(message.chat.id, UAH)
-        bot.send_message(message.chat.id, EUR)
-        last_message = ''
     else:
         answer = "Такого не существует"
         log(message)

@@ -49,6 +49,7 @@ def get_weather_for_specific_city(city):
                   "\n" + str(wind) + \
                   "\n" + str(description_brief) + \
                   "\n" + str(result_code)
+
     except urllib.error.HTTPError as err:
         if err.code == 404:
             message = 'Такого города не существует'
