@@ -6,6 +6,8 @@ import nbrb
 
 import news
 
+import sqlite3
+
 bot = telebot.TeleBot("760842492:AAHLvYk97oXR1SQpOnVy4InLZ9b69qyUrto")
 
 # Chat = 414407353
@@ -21,6 +23,7 @@ last_message = ''
 print(message_from_user)
 print(bot.get_me())
 
+
 def log(message):
     print("\n -----")
     from datetime import datetime
@@ -30,28 +33,50 @@ def log(message):
                                                                    str(message.from_user.id),
                                                                    message.text))
 
+def bd_add_user(message):
+    conn = sqlite3.connect('telegram-db.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO users VALUES ({0}, '{1}', '{2}')".format(message.from_user.id,
+                                                                    message.from_user.first_name,
+                                                                    message.from_user.last_name))
+    conn.commit()
+    c.close()
+    conn.close()
+
+def bd_add_message(message):
+    conn = sqlite3.connect('telegram-db.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO messages (user_id, message) VALUES ({0}, '{1}')".format(message.from_user.id,
+                                                                                   message.text))
+    conn.commit()
+    c.close()
+    conn.close()
+
 @bot.message_handler(commands=['start'])
 def handle_text(message):
     global last_message
     last_message = 'start'
     answer = "Начало положено"
     log(message)
+    bd_add_user(message)
     bot.send_message(message.chat.id, answer)
+
 
 @bot.message_handler(commands=['help'])
 def handle_text(message):
     global last_message
     last_message = 'help'
     answer = "Справочная система Telegram Bot'a NWER" + "\n" + \
-        "\n" + "Команды:" + \
-        "\n" + "/weather - показывает прогноз погоды в введенном городе" + \
-        "\n" + "Для отмены действия /weather введите команду Stop" + \
-        "\n" + "При попытке ввода несуществующего города - выводится соответствующее сообщения" + "\n" + \
-        "\n" + "/nbrb - выводит курс валют USD, EUR, RUB по собранным данным c сайта Национального Банка РБ" + \
-        "\n" + "Курс валют выводится на дату отправки сообщения" + "\n" + \
-        "\n" + "/news - выводит ТОП 10 мировых новостей"
+             "\n" + "Команды:" + \
+             "\n" + "/weather - показывает прогноз погоды в введенном городе" + \
+             "\n" + "Для отмены действия /weather введите команду Stop" + \
+             "\n" + "При попытке ввода несуществующего города - выводится соответствующее сообщения" + "\n" + \
+             "\n" + "/nbrb - выводит курс валют USD, EUR, RUB по собранным данным c сайта Национального Банка РБ" + \
+             "\n" + "Курс валют выводится на дату отправки сообщения" + "\n" + \
+             "\n" + "/news - выводит ТОП 10 мировых новостей"
     log(message)
     bot.send_message(message.chat.id, answer)
+
 
 @bot.message_handler(commands=['weather'])
 def handle_text(message):
@@ -61,6 +86,7 @@ def handle_text(message):
     log(message)
     bot.send_message(message.chat.id, answer)
 
+
 @bot.message_handler(commands=['nbrb'])
 def handle_text(message):
     global last_message
@@ -69,12 +95,15 @@ def handle_text(message):
     answer = "Курс валют на " + "\n" + str(date.today())
     log(message)
     bot.send_message(message.chat.id, answer)
-    rate = str(nbrb.USD['Cur_Scale']) + ' ' + nbrb.USD['Cur_Abbreviation']  + ' = ' + str(nbrb.USD['Cur_OfficialRate']) + "\n" + \
-           str(nbrb.EUR['Cur_Scale']) + ' ' + nbrb.EUR['Cur_Abbreviation']  + ' = ' + str(nbrb.EUR['Cur_OfficialRate']) + "\n" + \
-           str(nbrb.RUB['Cur_Scale']) + ' ' + nbrb.RUB['Cur_Abbreviation']  + ' = ' + str(nbrb.RUB['Cur_OfficialRate'])
+    rate = str(nbrb.USD['Cur_Scale']) + ' ' + nbrb.USD['Cur_Abbreviation'] + ' = ' + str(
+        nbrb.USD['Cur_OfficialRate']) + "\n" + \
+           str(nbrb.EUR['Cur_Scale']) + ' ' + nbrb.EUR['Cur_Abbreviation'] + ' = ' + str(
+        nbrb.EUR['Cur_OfficialRate']) + "\n" + \
+           str(nbrb.RUB['Cur_Scale']) + ' ' + nbrb.RUB['Cur_Abbreviation'] + ' = ' + str(nbrb.RUB['Cur_OfficialRate'])
     log(message)
     bot.send_message(message.chat.id, rate)
     last_message = ''
+
 
 @bot.message_handler(commands=['news'])
 def handle_text(message):
@@ -89,6 +118,7 @@ def handle_text(message):
         top_news = str(news_now['title']) + "\n" + str(news_now['url'])
         bot.send_message(message.chat.id, top_news)
         last_message = ''
+
 
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
@@ -109,5 +139,6 @@ def handle_text(message):
         answer = "Такого не существует"
         log(message)
         bot.send_message(message.chat.id, answer)
+        bd_add_message(message)
 
-bot.polling(none_stop = True, interval = 0)
+bot.polling(none_stop=True, interval=0)
