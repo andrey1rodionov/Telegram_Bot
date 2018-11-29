@@ -33,6 +33,7 @@ def log(message):
                                                                    str(message.from_user.id),
                                                                    message.text))
 
+
 def bd_add_user(message):
     conn = sqlite3.connect('telegram-db.db')
     c = conn.cursor()
@@ -43,6 +44,7 @@ def bd_add_user(message):
     c.close()
     conn.close()
 
+
 def bd_add_message(message):
     conn = sqlite3.connect('telegram-db.db')
     c = conn.cursor()
@@ -52,6 +54,7 @@ def bd_add_message(message):
     c.close()
     conn.close()
 
+
 @bot.message_handler(commands=['start'])
 def handle_text(message):
     global last_message
@@ -59,6 +62,7 @@ def handle_text(message):
     answer = "Начало положено"
     log(message)
     bd_add_user(message)
+    bd_add_message(message)
     bot.send_message(message.chat.id, answer)
 
 
@@ -75,6 +79,7 @@ def handle_text(message):
              "\n" + "Курс валют выводится на дату отправки сообщения" + "\n" + \
              "\n" + "/news - выводит ТОП 10 мировых новостей"
     log(message)
+    bd_add_message(message)
     bot.send_message(message.chat.id, answer)
 
 
@@ -84,6 +89,7 @@ def handle_text(message):
     last_message = 'weather'
     answer = "Введите город для прогноза погоды"
     log(message)
+    bd_add_message(message)
     bot.send_message(message.chat.id, answer)
 
 
@@ -93,7 +99,6 @@ def handle_text(message):
     last_message = 'nbrb'
     from datetime import date
     answer = "Курс валют на " + "\n" + str(date.today())
-    log(message)
     bot.send_message(message.chat.id, answer)
     rate = str(nbrb.USD['Cur_Scale']) + ' ' + nbrb.USD['Cur_Abbreviation'] + ' = ' + str(
         nbrb.USD['Cur_OfficialRate']) + "\n" + \
@@ -101,6 +106,7 @@ def handle_text(message):
         nbrb.EUR['Cur_OfficialRate']) + "\n" + \
            str(nbrb.RUB['Cur_Scale']) + ' ' + nbrb.RUB['Cur_Abbreviation'] + ' = ' + str(nbrb.RUB['Cur_OfficialRate'])
     log(message)
+    bd_add_message(message)
     bot.send_message(message.chat.id, rate)
     last_message = ''
 
@@ -112,6 +118,7 @@ def handle_text(message):
     from datetime import date
     answer = "Новости на " + "\n" + str(date.today())
     log(message)
+    bd_add_message(message)
     bot.send_message(message.chat.id, answer)
     all_news = news.news_now
     for news_now in all_news['articles']:
@@ -126,9 +133,9 @@ def handle_text(message):
     if last_message == 'weather':
         allweather = weather.get_weather_for_specific_city(message.text)
         log(message)
+        bd_add_message(message)
         if message.text == 'Stop':
             answer = 'Отмена команды weather'
-            log(message)
             bot.send_message(message.chat.id, answer)
             last_message = ''
         else:
@@ -138,7 +145,7 @@ def handle_text(message):
     else:
         answer = "Такого не существует"
         log(message)
-        bot.send_message(message.chat.id, answer)
         bd_add_message(message)
+        bot.send_message(message.chat.id, answer)
 
 bot.polling(none_stop=True, interval=0)
