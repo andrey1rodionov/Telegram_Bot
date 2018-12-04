@@ -120,7 +120,7 @@ def handle_text(message):
     log(message)
     bd_add_message(message)
     bot.send_message(message.chat.id, answer)
-    all_news = news.news_now
+    all_news = news.news_now_eng
     for news_now in all_news['articles']:
         top_news = str(news_now['title']) + "\n" + str(news_now['url'])
         bot.send_message(message.chat.id, top_news)
