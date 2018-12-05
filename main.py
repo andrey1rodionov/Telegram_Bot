@@ -77,7 +77,10 @@ def handle_text(message):
              "\n" + "При попытке ввода несуществующего города - выводится соответствующее сообщения" + "\n" + \
              "\n" + "/nbrb - выводит курс валют USD, EUR, RUB по собранным данным c сайта Национального Банка РБ" + \
              "\n" + "Курс валют выводится на дату отправки сообщения" + "\n" + \
-             "\n" + "/news - выводит ТОП 10 мировых новостей"
+             "\n" + "/news - выводит ТОП 10 мировых новостей" + \
+             "\n" + "Команда Rus - выводит русскоязычные новости" + \
+             "\n" + "Команда Eng - выводит англоязычные новости" + \
+             "\n" + "Для отмены действия /news введите команду Stop"
     log(message)
     bd_add_message(message)
     bot.send_message(message.chat.id, answer)
@@ -116,15 +119,10 @@ def handle_text(message):
     global last_message
     last_message = 'news'
     from datetime import date
-    answer = "Новости на " + "\n" + str(date.today())
+    answer = "Новости на " + "\n" + str(date.today()) + "\n" + 'Выберите регион для показа новостей'
     log(message)
     bd_add_message(message)
     bot.send_message(message.chat.id, answer)
-    all_news = news.news_now_eng
-    for news_now in all_news['articles']:
-        top_news = str(news_now['title']) + "\n" + str(news_now['url'])
-        bot.send_message(message.chat.id, top_news)
-        last_message = ''
 
 
 @bot.message_handler(content_types=['text'])
@@ -140,6 +138,29 @@ def handle_text(message):
             last_message = ''
         else:
             answer = message.text + "\n" + str(allweather)
+            bot.send_message(message.chat.id, answer)
+            last_message = ''
+    elif last_message == 'news':
+        log(message)
+        bd_add_message(message)
+        if message.text == 'Eng':
+            all_news = news.news_now_eng
+            for news_now in all_news['articles']:
+                top_news = str(news_now['title']) + "\n" + str(news_now['url'])
+                bot.send_message(message.chat.id, top_news)
+                last_message = ''
+        elif message.text == 'Rus':
+            all_news = news.news_now_ru
+            for news_now in all_news['articles']:
+                top_news = str(news_now['title']) + "\n" + str(news_now['url'])
+                bot.send_message(message.chat.id, top_news)
+                last_message = ''
+        elif message.text == 'Stop':
+            answer = 'Отмена команды news'
+            bot.send_message(message.chat.id, answer)
+            last_message = ''
+        else:
+            answer = "Такого не существует"
             bot.send_message(message.chat.id, answer)
             last_message = ''
     else:
