@@ -163,6 +163,11 @@ def handle_text(message):
             answer = "Такого не существует"
             bot.send_message(message.chat.id, answer)
             last_message = ''
+    elif message.text == 'Олды тут?':
+        answer = 'На месте !'
+        log(message)
+        bd_add_message(message)
+        bot.send_message(message.chat.id, answer)
     else:
         answer = "Такого не существует"
         log(message)
