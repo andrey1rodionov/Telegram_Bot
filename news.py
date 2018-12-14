@@ -2,9 +2,9 @@ import urllib.request
 
 import json
 
-api_endpoint_ru = "https://newsapi.org/v2/top-headlines?sources=google-news-ru"
+api_endpoint_ru = "http://newsapi.org/v2/top-headlines?sources=google-news-ru"
 
-api_endpoint_eng = "https://newsapi.org/v2/top-headlines?sources=google-news"
+api_endpoint_eng = "http://newsapi.org/v2/top-headlines?sources=google-news"
 
 apikey = "ee793d3a00ff404780cad47b8967013e"
 
